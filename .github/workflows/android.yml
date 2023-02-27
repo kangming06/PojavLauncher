@@ -99,7 +99,6 @@ jobs:
     - name: Build APK without runtime
       run: | 
         rm -r app_pojavlauncher/src/main/assets/components/jre
-        rm -r app_pojavlauncher/src/main/assets/components/jre-new
         ./gradlew assembleDebug
         mv app_pojavlauncher/build/outputs/apk/debug/app_pojavlauncher-debug.apk out/app-debug-noruntime.apk
         
@@ -109,18 +108,6 @@ jobs:
           name: app-debug
           path: out/app-debug.apk
           
-    - name: Upload onto the Google Play testing track
-      continue-on-error: true
-      if: github.repository_owner == 'PojavLauncherTeam' && github.ref_name == 'v3_openjdk'
-      uses: r0adkll/upload-google-play@v1.0.17
-      with:
-        serviceAccountJsonPlainText: ${{ secrets.GPLAY_SERVICE_JSON }}
-        packageName: net.kdt.pojavlaunch
-        releaseFiles: out/app-gplay.aab
-        track: internal
-        inAppUpdatePriority: 5
-        changesNotSentForReview: true
-        
     - name: Upload APK (without runtime)
       uses: actions/upload-artifact@v2
       with:
